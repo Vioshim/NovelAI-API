@@ -145,7 +145,7 @@ class Metadata(BaseModel):
     dynamic_thresholding: bool = False
     seed: int = Field(
         default_factory=lambda: random.randint(0, 4294967295 - 7),
-        gt=0,
+        ge=0,
         le=4294967295 - 7,
     )
     extra_noise_seed: Annotated[int, Field(gt=0, le=4294967295 - 7)] | None = None

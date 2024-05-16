@@ -25,15 +25,13 @@ class Endpoint(Enum):
 
 
 class Model(Enum):
-    # Anime V3
     V3 = "nai-diffusion-3"
+    ANIMEV3 = V3
     V3INP = "nai-diffusion-3-inpainting"
-
-    # Furry model beta v1.3
-    # Note that prompt preset in Metadata added by qualityToggle and ucPreset could be different,
-    # but this module will not be specially adapted for it until a stable version is released.
+    ANIMEV3INP = V3INP
     FURRY = "nai-diffusion-furry"
     FURRYINP = "furry-diffusion-inpainting"
+    FURRYV3 = "nai-diffusion-furry-3"
 
 
 class Controlnet(Enum):

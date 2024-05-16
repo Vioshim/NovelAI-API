@@ -37,7 +37,7 @@ class Metadata(BaseModel):
         Whether to automatically append quality tags to the prompt. Refer to https://docs.novelai.net/image/qualitytags.html
     ucPreset: `int`, optional
         Preset value of undisired content. Refer to https://docs.novelai.net/image/undesiredcontent.html
-        Range: 0-3, 0: Heavy, 1: Light, 2: Human Focus, 3: None
+        Range: 0-4, 0: Heavy, 1: Light, 2: Human Focus, 3: Furry Focus, 4: None
 
     | Image settings
     width: `int`, optional
@@ -132,7 +132,7 @@ class Metadata(BaseModel):
     # Prompt
     negative_prompt: str = ""
     qualityToggle: bool = True
-    ucPreset: Literal[0, 1, 2, 3] = 2
+    ucPreset: Literal[0, 1, 2, 3, 4] = 2
 
     # Image settings
     width: Annotated[int, Field(ge=64, le=49152)] | None = None
@@ -255,6 +255,11 @@ class Metadata(BaseModel):
                 self.negative_prompt += ", lowres, jpeg artifacts, worst quality, watermark, blurry, very displeasing"
             case 2:  # Human Focus
                 self.negative_prompt += ", lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], bad anatomy, bad hands, @_@, mismatched pupils, heart-shaped pupils, glowing eyes"
+            case 3:  # Furry Focus
+                self.negative_prompt += ", {{worst quality}}, [displeasing], {unusual pupils}, guide lines, {{unfinished}}, {bad}, url, artist name, {{tall image}}, mosaic, {sketch page}, comic panel, impact (font), [dated], {logo}, ych, {what}, {where is your god now}, {distorted text}, repeated text, {floating head}, {1994}, {widescreen}, absolutely everyone, sequence, {compression artifacts}, hard translated, {cropped}, {commissioner name}, unknown text, high contrast"
+
+        if "nsfw" not in self.prompt:
+            self.negative_prompt += ", nsfw"
 
         # Append quality tags to prompt
         if self.qualityToggle:

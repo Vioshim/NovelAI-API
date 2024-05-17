@@ -143,11 +143,7 @@ class Metadata(BaseModel):
     steps: int = Field(default=28, ge=1, le=50)
     scale: float = Field(default=6.0, ge=0, le=10, multiple_of=0.1)
     dynamic_thresholding: bool = False
-    seed: int = Field(
-        default_factory=lambda: random.randint(0, 4294967295 - 7),
-        ge=0,
-        le=4294967295 - 7,
-    )
+    seed: int = Field(default=0, ge=0, le=4294967295 - 7)
     extra_noise_seed: Annotated[int, Field(gt=0, le=4294967295 - 7)] | None = None
     sampler: Sampler = Sampler.EULER
     sm: bool = True
@@ -181,6 +177,17 @@ class Metadata(BaseModel):
     params_version: Literal[1] = 1
     legacy: bool = False
     legacy_v3_extend: bool = False
+
+    # seed be lambda: random.randint(0, 4294967295 - 7) if seed == 0 else seed
+    @model_validator(mode="after")
+    def seed_validator(self) -> "Metadata":
+        """
+        Validate the following
+
+        - If `seed` is 0, set it to a random value between 1 and 4294967295 - 7
+        """
+        self.seed = self.seed or random.randint(1, 4294967295 - 7)
+        return self
 
     @model_validator(mode="after")
     def n_samples_validator(self) -> "Metadata":

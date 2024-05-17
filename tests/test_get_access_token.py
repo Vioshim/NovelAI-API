@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 from httpx import AsyncClient
 
-from novelai import HEADERS, Endpoint, Host, NAIClient
+from novelai import NAIClient, Host, Endpoint, HEADERS
 from novelai.exceptions import APIError, AuthError, NovelAIError
 
 

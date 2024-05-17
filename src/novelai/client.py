@@ -3,12 +3,12 @@ from asyncio import Task
 from datetime import datetime
 
 from httpx import AsyncClient, ReadTimeout
-from pydantic import validate_call
 from loguru import logger
+from pydantic import validate_call
 
-from .types import User, Metadata, Image
-from .constant import Host, Endpoint, HEADERS
+from .constant import HEADERS, Endpoint, Host
 from .exceptions import AuthError, TimeoutError
+from .types import Image, Metadata, User
 from .utils import ResponseParser, encode_access_key
 
 
@@ -236,6 +236,10 @@ class NAIClient:
         ), f"Invalid response content type. Expected '{host.value.accept}', got '{response.headers['Content-Type']}'."
 
         return [
-            Image(filename=f"{datetime.now().strftime("%Y%m%d_%H%M%S")}_{host.name.lower()}_p{i}.png", data=data, metadata=metadata)
+            Image(
+                filename=f"{datetime.now().strftime("%Y%m%d_%H%M%S")}_{host.name.lower()}_p{i}.png",
+                data=data,
+                metadata=metadata,
+            )
             for i, data in enumerate(ResponseParser(response).parse_zip_content())
         ]

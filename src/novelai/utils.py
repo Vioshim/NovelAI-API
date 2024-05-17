@@ -1,13 +1,13 @@
 import io
 import zipfile
-from typing import Generator
 from base64 import urlsafe_b64encode
 from hashlib import blake2b
+from typing import Generator
 
 import argon2
 
+from .exceptions import APIError, AuthError, ConcurrentError, NovelAIError
 from .types import User
-from .exceptions import APIError, AuthError, NovelAIError, ConcurrentError
 
 
 # https://github.com/Aedial/novelai-api/blob/main/novelai_api/utils.py

@@ -1,14 +1,11 @@
-import os
 import asyncio
+import os
 
 from loguru import logger
 
-from novelai import NAIClient, Metadata, Host
+from novelai import Host, Metadata, NAIClient, UndesiredPreset
 
-
-client = NAIClient(
-    username=os.getenv("USERNAME"), password=os.getenv("PASSWORD")
-)
+client = NAIClient(username=os.getenv("USERNAME"), password=os.getenv("PASSWORD"))
 
 
 @logger.catch
@@ -35,7 +32,7 @@ async def task_web():
         prompt=os.getenv("PROMPT"),
         negative_prompt=os.getenv("NEGATIVE_PROMPT"),
         qualityToggle=False,
-        ucPreset=3,
+        ucPreset=UndesiredPreset.NONE,
         width=832,
         height=1216,
         n_samples=1,

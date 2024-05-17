@@ -1,20 +1,19 @@
-import os
-import base64
 import asyncio
+import base64
+import os
 import unittest
 from unittest.mock import AsyncMock, MagicMock
 
 from httpx import AsyncClient
 
-from novelai import NAIClient, Metadata, Host, Model, Action
+from novelai import Action, Host, Metadata, Model, NAIClient
 from novelai.exceptions import (
     APIError,
     AuthError,
     ConcurrentError,
-    TimeoutError,
     NovelAIError,
+    TimeoutError,
 )
-
 
 with open("tests/images/portrait.jpg", "rb") as f:
     base_image = base64.b64encode(f.read()).decode("utf-8")

@@ -2,7 +2,6 @@ from enum import Enum
 
 from .types import HostInstance
 
-
 HEADERS = {
     "Content-Type": "application/json",
     "Origin": "https://novelai.net",
@@ -76,3 +75,92 @@ class Noise(Enum):
     KARRAS = "karras"
     EXPONENTIAL = "exponential"
     POLYEXPONENTIAL = "polyexponential"
+
+
+class UndesiredPreset(Enum):
+    HEAVY = {
+        "nsfw",
+        "{{worst quality}}",
+        "[displeasing]",
+        "{unusual pupils}",
+        "guide lines",
+        "{{unfinished}}",
+        "{bad}",
+        "url",
+        "artist name",
+        "{{tall image}}",
+        "mosaic",
+        "{sketch page}",
+        "comic panel",
+        "impact (font)",
+        "[dated]",
+        "{logo}",
+        "ych",
+        "{what}",
+        "{where is your god now}",
+        "{distorted text}",
+        "repeated text",
+        "{floating head}",
+        "{1994}",
+        "{widescreen}",
+        "absolutely everyone",
+        "sequence",
+        "{compression artifacts}",
+        "hard translated",
+        "{cropped}",
+        "{commissioner name}",
+        "unknown text",
+        "high contrast",
+    }
+    LIGHT = {
+        "nsfw",
+        "{worst quality}",
+        "guide lines",
+        "unfinished",
+        "bad",
+        "url",
+        "tall image",
+        "widescreen",
+        "compression artifacts",
+        "unknown text",
+    }
+    HUMAN = {
+        "nsfw",
+        "lowres",
+        "{bad}",
+        "error",
+        "fewer",
+        "extra",
+        "missing",
+        "worst quality",
+        "jpeg artifacts",
+        "bad quality",
+        "watermark",
+        "unfinished",
+        "displeasing",
+        "chromatic aberration",
+        "signature",
+        "extra digits",
+        "artistic error",
+        "username",
+        "scan",
+        "[abstract]",
+        "bad anatomy",
+        "bad hands",
+        "@_@",
+        "mismatched pupils",
+        "heart-shaped pupils",
+        "glowing eyes",
+    }
+    NONE = set()
+
+    def __int__(self):
+        match self:
+            case UndesiredPreset.HEAVY:
+                return 0
+            case UndesiredPreset.LIGHT:
+                return 1
+            case UndesiredPreset.HUMAN:
+                return 2
+            case _:
+                return 3

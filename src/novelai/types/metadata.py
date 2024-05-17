@@ -1,10 +1,20 @@
 import math
 import random
-from typing import Literal, Annotated, override
+from collections import OrderedDict
+from itertools import chain
+from typing import Annotated, Literal, override
 
 from pydantic import BaseModel, Field, model_validator
 
-from novelai.constant import Model, Action, Sampler, Noise, Resolution, Controlnet
+from novelai.constant import (
+    Action,
+    Controlnet,
+    Model,
+    Noise,
+    Resolution,
+    Sampler,
+    UndesiredPreset,
+)
 
 
 class Metadata(BaseModel):
@@ -35,9 +45,8 @@ class Metadata(BaseModel):
         Refer to https://docs.novelai.net/image/undesiredcontent.html
     qualityToggle: `bool`, optional
         Whether to automatically append quality tags to the prompt. Refer to https://docs.novelai.net/image/qualitytags.html
-    ucPreset: `int`, optional
+    ucPreset: `novelai.UndesiredPreset`, optional
         Preset value of undisired content. Refer to https://docs.novelai.net/image/undesiredcontent.html
-        Range: 0-3, 0: Heavy, 1: Light, 2: Human Focus, 3: None
 
     | Image settings
     width: `int`, optional
@@ -132,7 +141,7 @@ class Metadata(BaseModel):
     # Prompt
     negative_prompt: str = ""
     qualityToggle: bool = True
-    ucPreset: Literal[0, 1, 2, 3] = 2
+    ucPreset: UndesiredPreset = Field(default=UndesiredPreset.HEAVY, exclude=True)
 
     # Image settings
     width: Annotated[int, Field(ge=64, le=49152)] | None = None
@@ -254,18 +263,36 @@ class Metadata(BaseModel):
         self.width = self.width or self.res_preset.value[0]
         self.height = self.height or self.res_preset.value[1]
 
-        # Append undesired content tags to negative prompt
-        match self.ucPreset:
-            case 0:  # Heavy
-                self.negative_prompt += ", lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract]"
-            case 1:  # Light
-                self.negative_prompt += ", lowres, jpeg artifacts, worst quality, watermark, blurry, very displeasing"
-            case 2:  # Human Focus
-                self.negative_prompt += ", lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], bad anatomy, bad hands, @_@, mismatched pupils, heart-shaped pupils, glowing eyes"
+        pos_tags = OrderedDict.fromkeys(
+            tag
+            for tag in map(
+                str.strip,
+                self.prompt.casefold().split(","),
+            )
+            if tag
+        )
 
         # Append quality tags to prompt
         if self.qualityToggle:
-            self.prompt += ", best quality, amazing quality, very aesthetic, absurdres"
+            pos_tags.update(
+                {
+                    "{best quality}": None,
+                    "{amazing quality}": None,
+                }
+            )
+
+        self.prompt = ", ".join(pos_tags)
+        self.negative_prompt = ", ".join(
+            tag
+            for tag in map(
+                str.strip,
+                chain(
+                    self.negative_prompt.casefold().split(","),
+                    self.ucPreset.value,
+                ),
+            )
+            if tag and tag not in pos_tags
+        )
 
         # Disable SMEA and SMEA DYN and fill default extra param values for img2img/inpaint
         if self.action == Action.IMG2IMG or self.action == Action.INPAINT:

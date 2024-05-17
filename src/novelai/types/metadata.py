@@ -141,7 +141,7 @@ class Metadata(BaseModel):
     # Prompt
     negative_prompt: str = ""
     qualityToggle: bool = True
-    ucPreset: UndesiredPreset = Field(default=UndesiredPreset.HEAVY, exclude=True)
+    ucPreset: UndesiredPreset = Field(default=UndesiredPreset.NONE, exclude=True)
 
     # Image settings
     width: Annotated[int, Field(ge=64, le=49152)] | None = None

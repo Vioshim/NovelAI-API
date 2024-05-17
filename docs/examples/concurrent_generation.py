@@ -4,7 +4,6 @@ import os
 from loguru import logger
 
 from novelai import Host, Metadata, NAIClient
-from novelai.constant import UndesiredPreset
 
 client = NAIClient(username=os.getenv("USERNAME"), password=os.getenv("PASSWORD"))
 
@@ -33,7 +32,6 @@ async def task_web():
         prompt=os.getenv("PROMPT"),
         negative_prompt=os.getenv("NEGATIVE_PROMPT"),
         qualityToggle=False,
-        ucPreset=UndesiredPreset.NONE,
         width=832,
         height=1216,
         n_samples=1,

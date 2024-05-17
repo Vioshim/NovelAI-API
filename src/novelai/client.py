@@ -3,16 +3,16 @@ from asyncio import Task
 from datetime import datetime
 
 from httpx import AsyncClient, ReadTimeout
-from loguru import logger
 from pydantic import validate_call
+from loguru import logger
 
+from .types import Image, Metadata, User
 from .constant import HEADERS, Endpoint, Host
 from .exceptions import AuthError, TimeoutError
-from .types import Image, Metadata, User
 from .utils import ResponseParser, encode_access_key
 
 
-def running(func) -> callable:
+def running(func):
     """
     Decorator to check if client is running before making a request.
     """

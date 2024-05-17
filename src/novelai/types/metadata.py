@@ -7,12 +7,12 @@ from typing import Annotated, Literal, override
 from pydantic import BaseModel, Field, model_validator
 
 from novelai.constant import (
-    Action,
-    Controlnet,
     Model,
+    Action,
+    Sampler,
     Noise,
     Resolution,
-    Sampler,
+    Controlnet,
     UndesiredPreset,
 )
 

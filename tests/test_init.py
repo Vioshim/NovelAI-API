@@ -2,7 +2,7 @@ import asyncio
 import unittest
 from unittest.mock import MagicMock, patch
 
-from novelai import Endpoint, Host, NAIClient
+from novelai import NAIClient, Host, Endpoint
 from novelai.exceptions import APIError, AuthError, NovelAIError
 
 

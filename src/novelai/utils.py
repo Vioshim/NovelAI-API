@@ -6,8 +6,8 @@ from typing import Generator
 
 import argon2
 
-from .exceptions import APIError, AuthError, ConcurrentError, NovelAIError
 from .types import User
+from .exceptions import APIError, AuthError, ConcurrentError, NovelAIError
 
 
 # https://github.com/Aedial/novelai-api/blob/main/novelai_api/utils.py

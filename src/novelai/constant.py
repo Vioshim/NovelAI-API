@@ -78,7 +78,7 @@ class Noise(Enum):
 
 
 class UndesiredPreset(Enum):
-    HEAVY = {
+    HEAVY = [
         "nsfw",
         "{{worst quality}}",
         "[displeasing]",
@@ -111,8 +111,8 @@ class UndesiredPreset(Enum):
         "{commissioner name}",
         "unknown text",
         "high contrast",
-    }
-    LIGHT = {
+    ]
+    LIGHT = [
         "nsfw",
         "{worst quality}",
         "guide lines",
@@ -123,8 +123,8 @@ class UndesiredPreset(Enum):
         "widescreen",
         "compression artifacts",
         "unknown text",
-    }
-    HUMAN = {
+    ]
+    HUMAN = [
         "nsfw",
         "lowres",
         "{bad}",
@@ -151,8 +151,8 @@ class UndesiredPreset(Enum):
         "mismatched pupils",
         "heart-shaped pupils",
         "glowing eyes",
-    }
-    NONE = set()
+    ]
+    NONE = []
 
     def __int__(self):
         match self:

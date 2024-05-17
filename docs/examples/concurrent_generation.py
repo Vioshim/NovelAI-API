@@ -3,7 +3,8 @@ import os
 
 from loguru import logger
 
-from novelai import Host, Metadata, NAIClient, UndesiredPreset
+from novelai import Host, Metadata, NAIClient
+from novelai.constant import UndesiredPreset
 
 client = NAIClient(username=os.getenv("USERNAME"), password=os.getenv("PASSWORD"))
 

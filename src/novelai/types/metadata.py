@@ -274,12 +274,8 @@ class Metadata(BaseModel):
 
         # Append quality tags to prompt
         if self.qualityToggle:
-            pos_tags.update(
-                {
-                    "{best quality}": None,
-                    "{amazing quality}": None,
-                }
-            )
+            pos_tags["{best quality}"] = None
+            pos_tags["{amazing quality}"] = None
 
         self.prompt = ", ".join(pos_tags)
         self.negative_prompt = ", ".join(

@@ -42,7 +42,7 @@ class NAIClient:
         NovelAI username, usually an email address
     password: `str`
         NovelAI password
-    proxy: `dict`, optional
+    proxy: `str`, optional
         Proxy to use for the client
     """
 
@@ -60,7 +60,7 @@ class NAIClient:
         self,
         username: str,
         password: str,
-        proxy: dict | None = None,
+        proxy: str | None = None,
     ):
         self.user = User(username=username, password=password)
         self.proxy = proxy
@@ -88,7 +88,7 @@ class NAIClient:
         """
         try:
             self.client = AsyncClient(
-                timeout=timeout, proxies=self.proxy, headers=HEADERS
+                timeout=timeout, proxy=self.proxy, headers=HEADERS
             )
             self.client.headers["Authorization"] = (
                 f"Bearer {await self.get_access_token()}"

@@ -44,6 +44,8 @@ class NAIClient:
         NovelAI password
     proxy: `str`, optional
         Proxy to use for the client
+    access_token: `str`, optional
+        NovelAI access token used for authorization
     """
 
     __slots__ = [
@@ -54,6 +56,7 @@ class NAIClient:
         "auto_close",
         "close_delay",
         "close_task",
+        "access_token",
     ]
 
     def __init__(
@@ -61,6 +64,7 @@ class NAIClient:
         username: str,
         password: str,
         proxy: str | None = None,
+        access_token: str | None = None,
     ):
         self.user = User(username=username, password=password)
         self.proxy = proxy
@@ -69,6 +73,7 @@ class NAIClient:
         self.auto_close: bool = False
         self.close_delay: float = 300
         self.close_task: Task | None = None
+        self.access_token = access_token
 
     async def init(
         self, timeout: float = 30, auto_close: bool = False, close_delay: float = 300
@@ -90,8 +95,12 @@ class NAIClient:
             self.client = AsyncClient(
                 timeout=timeout, proxy=self.proxy, headers=HEADERS
             )
+
+            if self.access_token is None:
+                self.access_token = await self.get_access_token()
+
             self.client.headers["Authorization"] = (
-                f"Bearer {await self.get_access_token()}"
+                f"Bearer {self.access_token}"
             )
 
             self.running = True
@@ -121,7 +130,9 @@ class NAIClient:
             self.close_task.cancel()
             self.close_task = None
 
-        await self.client.aclose()
+        if self.client:
+            await self.client.aclose()
+
         self.running = False
 
     async def reset_close_task(self) -> None:
